@@ -1,9 +1,8 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
 namespace AccurPdfCrop.WPF
 {
-    class SelectRectangle : ContentControl
+    public class SelectRectangle : ContentControl
     {
         public MergePanel Owner { get; private set; }
         internal const double DefaultMinHeight = 50;
@@ -14,7 +13,7 @@ namespace AccurPdfCrop.WPF
         public SelectRectangle(MergePanel owner)
         {
             this.Owner = owner;
-            this.Template = Application.Current.FindResource("SelectorTemplate") as ControlTemplate;
+            this.Template = Owner.FindResource(TemplateKey) as ControlTemplate;
             this.MinHeight = DefaultMinHeight;
             this.MinWidth = DefaultMinWidth;
         }

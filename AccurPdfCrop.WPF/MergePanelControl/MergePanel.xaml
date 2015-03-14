@@ -1,0 +1,54 @@
+﻿<UserControl x:Class="AccurPdfCrop.WPF.MergePanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300"
+             xmlns:s="clr-namespace:AccurPdfCrop.WPF">
+    <UserControl.Resources>
+        <ControlTemplate x:Key="MoveThumbTemplate" TargetType="{x:Type s:MoveThumb}">
+            <Rectangle Fill="#220000FF" Stroke="#660000FF"/>
+        </ControlTemplate>
+
+        <ControlTemplate x:Key="ResizeThumbTemplate" TargetType="{x:Type s:ResizeThumb}">
+            <Rectangle Fill="Transparent"/>
+        </ControlTemplate>
+
+        <ControlTemplate x:Key="CornerResizeThumbTemplate" TargetType="{x:Type s:ResizeThumb}">
+            <Rectangle Fill="#330000FF"/>
+        </ControlTemplate>
+
+        <ControlTemplate x:Key="SelectorTemplate" TargetType="s:SelectRectangle">
+            <Grid DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
+                <s:MoveThumb Template="{StaticResource MoveThumbTemplate}" Cursor="SizeAll"/>
+
+                <s:ResizeThumb  Template="{StaticResource ResizeThumbTemplate}" Height="5" Cursor="SizeNS"
+                       VerticalAlignment="Top" HorizontalAlignment="Stretch"/>
+                <s:ResizeThumb  Template="{StaticResource ResizeThumbTemplate}" Width="5" Cursor="SizeWE"
+                       VerticalAlignment="Stretch" HorizontalAlignment="Left"/>
+                <s:ResizeThumb  Template="{StaticResource ResizeThumbTemplate}"  Width="5" Cursor="SizeWE"
+                       VerticalAlignment="Stretch" HorizontalAlignment="Right"/>
+                <s:ResizeThumb  Template="{StaticResource ResizeThumbTemplate}"  Height="5" Cursor="SizeNS"
+                       VerticalAlignment="Bottom" HorizontalAlignment="Stretch"/>
+                <s:ResizeThumb  Template="{StaticResource CornerResizeThumbTemplate}"  Width="12" Height="12" Cursor="SizeNWSE" Margin="0 0 0 0"
+                       VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                <s:ResizeThumb  Template="{StaticResource CornerResizeThumbTemplate}"  Width="12" Height="12" Cursor="SizeNESW" Margin="0 0 0 0"
+                       VerticalAlignment="Top" HorizontalAlignment="Right"/>
+                <s:ResizeThumb  Template="{StaticResource CornerResizeThumbTemplate}"  Width="12" Height="12" Cursor="SizeNESW" Margin="0 0 0 0"
+                       VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
+                <s:ResizeThumb  Template="{StaticResource CornerResizeThumbTemplate}"  Width="12" Height="12" Cursor="SizeNWSE" Margin="0 0 0 0"
+                       VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
+            </Grid>
+        </ControlTemplate>
+    </UserControl.Resources>
+    <Grid>
+        <Border Margin="0" BorderBrush="Black" BorderThickness="2">
+            <Border.Effect>
+                <DropShadowEffect ShadowDepth="0" BlurRadius="10" Opacity="0.3"/>
+            </Border.Effect>
+        </Border>
+        <Canvas x:Name="Canvas" Background="White" MouseLeftButtonDown="MergePanel_MouseLeftButtonDown"
+                MouseLeftButtonUp="MergePanel_MouseLeftButtonUp" MouseMove="MergePanel_MouseMove"/>
+    </Grid>
+</UserControl>

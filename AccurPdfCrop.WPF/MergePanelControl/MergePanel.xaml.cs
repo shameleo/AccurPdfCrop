@@ -16,17 +16,16 @@ namespace AccurPdfCrop.WPF
         public ContentControl SelectRectangle { get; set; }
     }
 
-    class MergePanel : ContentControl
+    /// <summary>
+    /// Interaction logic for MergePanel.xaml
+    /// </summary>
+    partial class MergePanel : UserControl
     {
         private MouseDragHandler DragHandler;
 
         public MergePanel()
         {
-            this.MouseLeftButtonDown += MergePanel_MouseLeftButtonDown;
-            this.MouseMove += MergePanel_MouseMove;
-            this.MouseLeftButtonUp += MergePanel_MouseLeftButtonUp;
-            this.MinHeight = 100;
-            this.MinWidth = 100;
+            InitializeComponent();
         }
 
         public SelectRectangle CreateSelectRectangle(double left, double top, double width, double height)
@@ -36,24 +35,9 @@ namespace AccurPdfCrop.WPF
             selectRect.Height = height;
             Canvas.SetTop(selectRect, top);
             Canvas.SetLeft(selectRect, left);
-            (Content as Canvas).Children.Add(selectRect);
+            Canvas.Children.Add(selectRect);
 
             return selectRect;
-        }
-
-        public override void EndInit()
-        {
-            base.EndInit();
-
-            if(Content == null)
-            {
-                Content = new Canvas();
-            }
-            else
-            {
-                if ((Content as Canvas) == null)
-                    throw new Exception("MergePanel Content property must contain Canvas");
-            }
         }
 
         private void MergePanel_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

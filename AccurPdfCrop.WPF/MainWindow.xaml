@@ -4,15 +4,7 @@
         xmlns:s="clr-namespace:AccurPdfCrop.WPF"
         Title="MainWindow" Height="550" Width="800">
     <WrapPanel x:Name="mergePanelsView" Background="#FFF0F0F0">
-        <!--<s:MergePanel Margin="15" Width="300"
-                    MinWidth="50"
-                    Height="250"
-                    MinHeight="50"
-                    Canvas.Top="15"
-                    Canvas.Left="47" Template="{StaticResource MergePanelTemplate}">
-            <Canvas Background="White">
-                
-            </Canvas>
-        </s:MergePanel>-->
+        <!--<s:MergePanel Margin="6" Height="303" Width="310"/>
+        <s:MergePanel Margin="6" Height="303" Width="310"/>-->
     </WrapPanel>
 </Window>
