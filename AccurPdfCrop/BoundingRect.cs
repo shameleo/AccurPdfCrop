@@ -1,7 +1,7 @@
 ﻿
 namespace AccurPdfCrop
 {
-    class BoundingRect
+    public class BoundingRect
     {
         public int Left { get; private set; }
         public int Right { get; private set; }
@@ -10,7 +10,7 @@ namespace AccurPdfCrop
 
         private BoundingRect() { }
 
-        static public BoundingRect DetectOnColor(byte[] pixels, int width, int height)
+        static internal BoundingRect DetectOnColor(byte[] pixels, int width, int height)
         {
             var result = new BoundingRect();
             int i;
@@ -32,7 +32,7 @@ namespace AccurPdfCrop
             return result;
         }
 
-        static BoundingRect DetectOnGrey(byte[] pixels, int width, int height)
+        static internal BoundingRect DetectOnGrey(byte[] pixels, int width, int height)
         {
             var result = new BoundingRect();
             int i;
@@ -89,10 +89,9 @@ namespace AccurPdfCrop
             {
                 while (i < tempIndex)
                 {
-                    if (pixels[i] + pixels[++i] + pixels[++i] < 755)
+                    if (pixels[i] + pixels[++i] + pixels[++i] < 765)
                         return i;       // RETURN
 
-                    //i += width - 2;
                     i += dw;
                 }
 
@@ -110,7 +109,7 @@ namespace AccurPdfCrop
             {
                 while (i < tempIndex)
                 {
-                    if (pixels[i] + pixels[++i] + pixels[++i] < 755)
+                    if (pixels[i] + pixels[++i] + pixels[++i] < 765)
                         return i;       // RETURN
 
                     i += dw;

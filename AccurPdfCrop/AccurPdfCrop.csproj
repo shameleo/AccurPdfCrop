@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PdfiumWrapper.NET">
+      <HintPath>..\_Libs\PdfiumWrapper.NET.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -39,6 +42,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BoundingRect.cs" />
+    <Compile Include="GUISpecific\GUIWorkflow.cs" />
+    <Compile Include="GUISpecific\ImageInfo.cs" />
     <Compile Include="PageInterval.cs" />
     <Compile Include="PageSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
