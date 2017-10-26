@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="styles.css">
+	<title>Accur-Pdf-Crop</title>
+</head>
+	<body style="background: #aaa">
+		<div id="root">
+			<merge-view></merge-view>
+		</div>
+
+		<script src="./libs/vue.js"></script>
+
+		<script type="text/x-template" id="tmpl-merge-view">
+			<div style="background: white; border: 1px solid gray; height: 500px; width: 400px; position: relative;">
+				<selection-area :x1="0" :x2="200" :y1="0" :y2="300"></selection-area>
+			</div>
+		</script>
+		<script type="text/javascript">
+			Vue.component('merge-view', {
+				template: '#tmpl-merge-view'
+			});
+		</script>
+
+		<script type="text/x-template" id="tmpl-selection-area">
+			<div class="selection" @mousedown="startMoving($event)" :style="{ top: t + 'px', left: l + 'px', height: height + 'px', width: width + 'px' }">
+				<div class="corner top left" @mousedown="startMoving($event, 'l', 't')"></div>
+				<div class="corner top right" @mousedown="startMoving($event, 'r', 't')"></div>
+				<div class="corner bottom left" @mousedown="startMoving($event, 'l', 'b')"></div>
+				<div class="corner bottom right" @mousedown="startMoving($event, 'r', 'b')"></div>
+				<div class="side top" @mousedown="startMoving($event, null, 't')"></div>
+				<div class="side bottom" @mousedown="startMoving($event, null, 'b')"></div>
+				<div class="side left" @mousedown="startMoving($event, 'l', null)"></div>
+				<div class="side right" @mousedown="startMoving($event, 'r', null)"></div>
+			</div>
+		</script>
+		<script type="text/javascript">
+			(function (){
+				let currHandler, handlerOffsetX, handlerOffsetY, prevX, prevY;
+				const cursors = {
+					lt: 'nwse-resize',
+					rt: 'nesw-resize',
+					lb: 'nesw-resize',
+					rb: 'nwse-resize',
+					l: 'ew-resize',
+					r: 'ew-resize',
+					t: 'ns-resize',
+					b: 'ns-resize',
+					all: 'move'
+				};
+
+				function onMouseUp(e){
+					if (currHandler) {
+						window.removeEventListener('mousemove', currHandler);
+						currHandler = null;
+						document.getElementsByTagName('body')[0].style.cursor = '';
+					}
+				}
+
+				window.addEventListener('mouseup', onMouseUp);
+
+				Vue.component('selection-area', {
+					template: '#tmpl-selection-area',
+					props: ['x1', 'x2', 'y1', 'y2', 'applyExtLimits'],
+					data(){
+						return {
+							t: this.x1,
+							b: this.x2,
+							l: this.y1,
+							r: this.y2
+						}	
+					},
+					methods: {
+						startMoving(e, xKey, yKey){
+							let handlerKey;
+
+							if (currHandler) {
+								return;
+							}
+
+							if (xKey || yKey) {
+								handlerKey = (xKey || '') + (yKey || '');
+								currHandler = function(e){
+									let delta = {
+										x: xKey ? e.clientX - prevX : 0,
+										y: yKey ? e.clientY - prevY : 0
+									};
+
+									let requestedDelta = {
+										x: delta.x,
+										y: delta.y
+									};
+
+									if (Math.sign(delta.x) == -Math.sign(handlerOffsetX)) {
+										if (Math.abs(handlerOffsetX) < Math.abs(delta.x)){
+											delta.x += handlerOffsetX;
+										}
+										else {
+											delta.x = 0; 
+										}
+									}
+
+									if(Math.sign(delta.y) == -Math.sign(handlerOffsetY))
+										if(Math.abs(handlerOffsetY) < Math.abs(delta.y)){
+											delta.y += handlerOffsetY;
+										}
+										else {
+											delta.y = 0; 
+										}
+
+									delta = this.applyIntLimits(delta, xKey, yKey);
+
+									if(this.applyExtLimits)
+										delta = this.applyExtLimits(delta, xKey, yKey, currX, currY);	//надо еще текущие кооординаты передать
+
+									handlerOffsetX += requestedDelta.x - delta.x;
+									handlerOffsetY += requestedDelta.y - delta.y;
+
+									this[xKey] += delta.x;
+									this[yKey] += delta.y;
+									prevX = e.clientX;
+									prevY = e.clientY;
+								}.bind(this);
+							}
+							else {
+								handlerKey = 'all';
+								currHandler = function(e){
+									let delta = {
+										x: e.clientX - prevX,
+										y: e.clientY - prevY
+									};
+
+									if (this.applyExtLimits)
+										delta = this.applyExtLimits(delta, null, null, currX, currY);
+
+									this.l += delta.x;
+									this.r += delta.x;
+									this.t += delta.y;
+									this.b += delta.y;
+									prevX = e.clientX;
+									prevY = e.clientY;
+								}.bind(this)
+							}
+
+							handlerOffsetX = 0;
+							handlerOffsetY = 0;
+							prevX = e.clientX;
+							prevY = e.clientY;
+							document.getElementsByTagName('body')[0].style.cursor = cursors[handlerKey];
+							window.addEventListener('mousemove', currHandler);
+
+							e.preventDefault();
+						},
+						applyIntLimits(delta, xKey, yKey){
+							const minWidth = 50, minHeight = 50;
+							let	maxAbsDw = this.width - minWidth,
+								maxAbsDh = this.height - minHeight
+							
+							if (xKey == 'l' && maxAbsDw < delta.x)
+								delta.x = maxAbsDw;
+							else if (xKey == 'r' && maxAbsDw < -delta.x)
+								delta.x = -maxAbsDw;
+
+							if (yKey == 't' && maxAbsDh < delta.y)
+								delta.y = maxAbsDh;
+							else if (yKey == 'b' && maxAbsDh < -delta.y)
+								delta.y = -maxAbsDh;
+
+							return delta;
+						}
+					},
+					computed: {
+						width: {
+							get() { return this.r - this.l; },
+							set(width) { this.r = this.l + width; }
+						},
+						height: {
+							get() { return this.b - this.t; },
+							set(height) { this.b = this.t + height; }
+						}
+					}
+				});
+			})();
+
+
+		    const vm = new Vue({
+				el: '#root'
+			});
+		</script>
+	</body>
+</html>

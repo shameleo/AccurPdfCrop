@@ -1,0 +1,81 @@
+*{
+  box-sizing: border-box;
+}
+
+.selection {
+  border: 1px dashed gray;
+  width: 400px;
+  height: 400px;
+  position: absolute;
+}
+
+.corner{
+  width: 10px;
+  height: 10px;
+  background: gray;
+  opacity: 0.3;
+  position: absolute;
+}
+
+.corner.top {
+  top: -1px;
+}
+
+.corner.bottom {
+  bottom: -1px;
+}
+
+.corner.left {
+  left: -1px;
+}
+
+.corner.right {
+  right: -1px;
+}
+
+.corner.top.left,
+.corner.bottom.right {
+  cursor: nwse-resize;
+}
+
+.corner.top.right,
+.corner.bottom.left {
+  cursor: nesw-resize;
+}
+
+.side {
+  position: absolute;
+  background: transparent;
+}
+
+.side.top {
+  top: 0;
+}
+
+.side.bottom {
+  bottom: 0;
+}
+
+.side.left {
+  left: 0;
+}
+
+.side.right {
+  right: 0;
+}
+
+.side.top,
+.side.bottom {
+  left: 10px;
+  right: 10px;
+  height: 5px;
+  cursor: ns-resize;
+}
+
+.side.left,
+.side.right {
+  top: 10px;
+  bottom: 10px;
+  width: 5px;
+  cursor: ew-resize;
+}
