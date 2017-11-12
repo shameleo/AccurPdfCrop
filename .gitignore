@@ -194,3 +194,10 @@ FakesAssemblies/
 
 # Visual Studio 6 workspace options file
 *.opt
+
+# File manager (Dolphin) file
+.directory
+
+/AccurPdfCrop.WebGUI/node_modules/
+/AccurPdfCrop.WebGUI/dist/
+/AccurPdfCrop.WebGUI/temp/
